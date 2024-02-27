@@ -1,0 +1,17 @@
+﻿  1>Checking Build System
+  CMake is re-running because C:/Users/f1ye.AD.004/source/repos/cuda-fft/build/CMakeFiles/generate.stamp is out-of-date.
+    the file 'C:/Users/f1ye.AD.004/source/repos/cuda-fft/CMakeLists.txt'
+    is newer than 'C:/Users/f1ye.AD.004/source/repos/cuda-fft/build/CMakeFiles/generate.stamp.depend'
+    result='-1'
+  -- Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.19045.
+  CMake Warning (dev) at CMakeLists.txt:3 (find_package):
+    Policy CMP0146 is not set: The FindCUDA module is removed.  Run "cmake
+    --help-policy CMP0146" for policy details.  Use the cmake_policy command to
+    set the policy and suppress this warning.
+  
+  This warning is for project developers.  Use -Wno-dev to suppress it.
+  
+  -- pybind11 v2.12.0 dev1
+  -- Configuring done (0.1s)
+  -- Generating done (0.1s)
+  -- Build files have been written to: C:/Users/f1ye.AD.004/source/repos/cuda-fft/build

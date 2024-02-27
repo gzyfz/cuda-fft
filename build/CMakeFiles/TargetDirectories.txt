@@ -1,0 +1,4 @@
+C:/Users/f1ye.AD.004/source/repos/cuda-fft/build/CMakeFiles/fft_module.dir
+C:/Users/f1ye.AD.004/source/repos/cuda-fft/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/f1ye.AD.004/source/repos/cuda-fft/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/f1ye.AD.004/source/repos/cuda-fft/build/extern/pybind11/CMakeFiles/ALL_BUILD.dir

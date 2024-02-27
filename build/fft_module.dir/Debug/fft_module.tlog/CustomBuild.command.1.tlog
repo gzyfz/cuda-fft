@@ -1,0 +1,10 @@
+^C:\USERS\F1YE.AD.004\SOURCE\REPOS\CUDA-FFT\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/f1ye.AD.004/source/repos/cuda-fft -BC:/Users/f1ye.AD.004/source/repos/cuda-fft/build --check-stamp-file C:/Users/f1ye.AD.004/source/repos/cuda-fft/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
