@@ -2,11 +2,11 @@ from setuptools import setup, Extension
 from torch.utils.cpp_extension import BuildExtension, CUDAExtension
 
 setup(
-    name='pyfft',  # Package name
-    version='0.1',  # Package version
-    author='Your Name',
-    author_email='your.email@example.com',
-    description='A small package for FFT/IFFT using CUDA',
+    name='pyfft',  
+    version='0.1',  
+    author='Fangzhou Ye',
+    author_email='f1ye@ucsd.edu',
+    description='A small package for FFT/2D_FFT using CUDA',
     long_description='This package provides Python bindings to CUDA-accelerated FFT and IFFT operations.',
     ext_modules=[
         CUDAExtension(

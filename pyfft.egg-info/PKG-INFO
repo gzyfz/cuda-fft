@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: pyfft
+Version: 0.1
+Summary: A small package for FFT/IFFT using CUDA
+Home-page: UNKNOWN
+Author: Your Name
+Author-email: your.email@example.com
+License: UNKNOWN
+Description: This package provides Python bindings to CUDA-accelerated FFT and IFFT operations.
+Platform: UNKNOWN

@@ -1,8 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\out\\build"
+    "\\test"
   ],
-  "SelectedNode": "\\test",
+  "SelectedNode": "\\test\\test.sh",
   "PreviewInSolutionExplorer": false
 }

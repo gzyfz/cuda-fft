@@ -1,2 +1,0 @@
-﻿  main.cpp
-C:\Users\f1ye.AD.004\source\repos\cuda-fft\main.cpp(2,10): fatal error C1083: Cannot open include file: 'opencv2/opencv.hpp': No such file or directory
