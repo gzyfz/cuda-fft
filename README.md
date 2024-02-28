@@ -1,9 +1,9 @@
 ## prerequisites 
-#tools
+# tools
 CUDA toolkit 11.6
 python >=3.7 <=3.8
 CMake
-#python packages
+# python packages
 numpy
 open-cv
 
