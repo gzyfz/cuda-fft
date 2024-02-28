@@ -11,7 +11,7 @@ setup(
     ext_modules=[
         CUDAExtension(
             name='pyfft',  # Extension name, used for import in Python
-            sources=['main.cpp', 'fft.cu',],  # Source files
+            sources=['src/main.cpp', 'src/fft.cu',],  # Source files
             include_dirs=[],  # Any include directories needed
             libraries=['cufft'],  # CUDA cuFFT Library
             library_dirs=[],  # Any additional library directories needed

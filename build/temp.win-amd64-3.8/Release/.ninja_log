@@ -1,3 +1,3 @@
 # ninja log v5
-2	749	7308084828336447	C:/Users/f1ye/Desktop/github/cuda-fft/build/temp.win-amd64-3.8/Release/fft.obj	c72359bf6105a93d
-1	1187	7308084832645672	C:/Users/f1ye/Desktop/github/cuda-fft/build/temp.win-amd64-3.8/Release/main.obj	5394284315c61d0c
+2	746	7308100810120681	C:/Users/f1ye/Desktop/github/cuda-fft/build/temp.win-amd64-3.8/Release/src/fft.obj	2f15200f81eea297
+1	1200	7308100814654641	C:/Users/f1ye/Desktop/github/cuda-fft/build/temp.win-amd64-3.8/Release/src/main.obj	e67e62660c4b260a

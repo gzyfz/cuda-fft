@@ -22,8 +22,8 @@ rule cuda_compile
 
 
 
-build C$:\Users\f1ye\Desktop\github\cuda-fft\build\temp.win-amd64-3.8\Release\main.obj: compile C$:\Users\f1ye\Desktop\github\cuda-fft\main.cpp
-build C$:\Users\f1ye\Desktop\github\cuda-fft\build\temp.win-amd64-3.8\Release\fft.obj: cuda_compile C$:\Users\f1ye\Desktop\github\cuda-fft\fft.cu
+build C$:\Users\f1ye\Desktop\github\cuda-fft\build\temp.win-amd64-3.8\Release\src/main.obj: compile C$:\Users\f1ye\Desktop\github\cuda-fft\src\main.cpp
+build C$:\Users\f1ye\Desktop\github\cuda-fft\build\temp.win-amd64-3.8\Release\src/fft.obj: cuda_compile C$:\Users\f1ye\Desktop\github\cuda-fft\src\fft.cu
 
 
 
