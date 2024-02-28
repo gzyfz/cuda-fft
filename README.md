@@ -1,11 +1,11 @@
 ## prerequisites 
-# tools
+# tools 
 CUDA toolkit 11.6 \
 python >=3.7 <=3.8 \
-CMake
+CMake \
 # python packages
-numpy
-open-cv
+numpy \
+open-cv \
 
 
 ## set-up
@@ -34,5 +34,5 @@ simply run the setup.py to have the package generated and install on your machin
     image_fft = pyfft.fft_image(image_normalized)
 ```
  ## test
- specify your location of CUDA tool kit in test file and simply run test.sh or test.bat
+ specify your location of CUDA tool kit in test file and simply run test.sh or test.bat.
 
