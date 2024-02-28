@@ -1,7 +1,7 @@
 ## prerequisites 
 # tools
-CUDA toolkit 11.6
-python >=3.7 <=3.8
+CUDA toolkit 11.6 \
+python >=3.7 <=3.8 \
 CMake
 # python packages
 numpy
