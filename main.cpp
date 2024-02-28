@@ -1,46 +1,84 @@
-#include <iostream>
-#include <opencv2/opencv.hpp>
-#include "fft.cu" // Your FFT CUDA header
+#include <pybind11/pybind11.h>
+#include <pybind11/numpy.h>
+#include <pybind11/stl.h>
+#include "fft.h"
 
-// Use OpenCV namespace for convenience
-using namespace cv;
-using namespace std;
+namespace py = pybind11;
 
-int main(int argc, char** argv) {
-    if (argc < 2) {
-        cout << "Usage: " << argv[0] << " <Image_Path>" << endl;
-        return -1;
+// Wrapper function for FFT
+py::array_t<std::complex<float>> fft(py::array_t<std::complex<float>, py::array::c_style | py::array::forcecast> input) {
+    py::buffer_info buf = input.request();
+    int N = buf.shape[0];
+
+    // Allocate memory on host
+    cufftComplex *host_input = new cufftComplex[N];
+    
+    // Convert input to cufftComplex format
+    auto ptr = static_cast<std::complex<float> *>(buf.ptr);
+    for (int i = 0; i < N; ++i) {
+        host_input[i].x = ptr[i].real();
+        host_input[i].y = ptr[i].imag();
     }
 
-    // Load the image
-    Mat image = imread(argv[1], IMREAD_GRAYSCALE); // Load as grayscale
-    if (image.empty()) {
-        cout << "Could not open or find the image" << endl;
-        return -1;
+    // Perform FFT (function will allocate device memory, copy data, compute FFT, and copy back)
+    cufftComplex *host_output = perform_fft(host_input, N);
+
+    // Create output array
+    auto result = py::array_t<std::complex<float>>(buf.size);
+    py::buffer_info buf_out = result.request();
+    auto ptr_out = static_cast<std::complex<float> *>(buf_out.ptr);
+
+    // Copy the result to the output array
+    for (int i = 0; i < N; ++i) {
+        ptr_out[i] = std::complex<float>(host_output[i].x, host_output[i].y);
     }
 
-    // Convert to float and normalize (preparation for FFT)
-    Mat floatImage;
-    image.convertTo(floatImage, CV_32F, 1.0 / 255.0);
+    // Cleanup
+    delete[] host_input;
+    delete[] host_output;
 
-    // Define the window for FFT (startX, startY, width, height)
-    // In a real application, these values could be passed as parameters or selected interactively
-    int startX = 10, startY = 10, windowWidth = 100, windowHeight = 100;
+    return result;
+}
 
-    // Placeholder for the result (same size as the input window)
-    Mat fftResult(windowHeight, windowWidth, CV_32F);
+// Function to apply FFT on each row of a 2D image
+py::array_t<std::complex<float>> fft_image(py::array_t<float, py::array::c_style | py::array::forcecast> input) {
+    auto buf = input.request();
+    if (buf.ndim != 2) throw std::runtime_error("Input should be a 2D array");
+    int height = buf.shape[0];
+    int width = buf.shape[1];
 
-    // Call your CUDA FFT function
-    // You need to implement this function to perform FFT using CUDA on the selected window
-    // and store the result in fftResult
-    applyFFT(floatImage, fftResult, startX, startY, windowWidth, windowHeight);
+    // Allocate host memory for input and output
+    cufftComplex *host_input = new cufftComplex[width * height];
+    cufftComplex *host_output = new cufftComplex[width * height];
 
-    // Convert fftResult to an image format (if necessary) and save or display it
-    // This might involve scaling the values to the visible range and converting to uchar
-    Mat displayImage;
-    fftResult.convertTo(displayImage, CV_8U, 255.0); // Simple normalization to [0,255]
-    imshow("FFT Result", displayImage);
-    waitKey(0);
+    // Prepare input (assume input is already grayscale)
+    for (ssize_t i = 0; i < width * height; ++i) {
+        host_input[i].x = static_cast<float*>(buf.ptr)[i]; // Real part
+        host_input[i].y = 0.0; // Imaginary part is 0 for real input
+    }
 
-    return 0;
+    // Perform FFT on the image
+    perform_fft_2d(host_input, host_output, width, height);
+
+    // Prepare output
+    auto result = py::array_t<std::complex<float>>(buf.size);
+    auto result_buf = result.request();
+    result.resize({height, width}); // Ensure result has the same shape as input
+
+    // Copy the FFT results to the output array
+    for (ssize_t i = 0; i < width * height; ++i) {
+        static_cast<std::complex<float>*>(result_buf.ptr)[i] = {host_output[i].x, host_output[i].y};
+    }
+
+    // Clean up
+    delete[] host_input;
+    delete[] host_output;
+
+    return result;
+}
+
+PYBIND11_MODULE(pyfft, m) {
+    m.doc() = "CUDA FFT operations exposed with pybind11";
+    m.def("fft", &fft, "Perform FFT on a numpy array of complex numbers using CUDA.");
+	m.def("fft_image", &fft_image, "Apply FFT on each row of a 2D numpy array (image) using CUDA.");
 }

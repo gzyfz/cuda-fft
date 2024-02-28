@@ -2,41 +2,50 @@
 #include <cufft.h>
 #include <cuda_runtime.h>
 
-// CUDA kernel to prepare data, assuming input is in row-major format
-__global__ void prepareData(cufftReal* input, cufftReal* output, int width, int startX, int startY, int windowWidth, int windowHeight) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    int idy = blockIdx.y * blockDim.y + threadIdx.y;
+// Perform FFT on the GPU and return the result to host
+cufftComplex* perform_fft(cufftComplex* host_input, int N) {
+    cufftComplex *device_input, *device_output;
 
-    if (idx < windowWidth && idy < windowHeight) {
-        int inputIndex = (startY + idy) * width + (startX + idx);
-        output[idy * windowWidth + idx] = input[inputIndex];
-    }
-}
+    // Allocate memory on the device
+    cudaMalloc(&device_input, N * sizeof(cufftComplex));
+    cudaMalloc(&device_output, N * sizeof(cufftComplex));
 
-// Wrapper function to call FFT
-void performFFT(cufftReal* input, cufftComplex* output, int width, int height, int startX, int startY, int windowWidth, int windowHeight) {
-    cufftHandle plan;
-    cufftReal* d_input;
-    cufftComplex* d_output;
-
-    // Allocate memory on device
-    cudaMalloc(&d_input, windowWidth * windowHeight * sizeof(cufftReal));
-    cudaMalloc(&d_output, windowWidth * windowHeight * sizeof(cufftComplex));
-
-    // Prepare data
-    dim3 blocks((windowWidth + 15) / 16, (windowHeight + 15) / 16);
-    dim3 threads(16, 16);
-    prepareData << <blocks, threads >> > (input, d_input, width, startX, startY, windowWidth, windowHeight);
+    // Copy data from host to device
+    cudaMemcpy(device_input, host_input, N * sizeof(cufftComplex), cudaMemcpyHostToDevice);
 
     // Create plan and execute FFT
-    cufftPlan2d(&plan, windowWidth, windowHeight, CUFFT_R2C);
-    cufftExecR2C(plan, d_input, d_output);
+    cufftHandle plan;
+    cufftPlan1d(&plan, N, CUFFT_C2C, 1);
+    cufftExecC2C(plan, device_input, device_output, CUFFT_FORWARD);
+
+    // Allocate output memory on the host
+    cufftComplex* host_output = new cufftComplex[N];
 
     // Copy result back to host
-    cudaMemcpy(output, d_output, windowWidth * windowHeight * sizeof(cufftComplex), cudaMemcpyDeviceToHost);
+    cudaMemcpy(host_output, device_output, N * sizeof(cufftComplex), cudaMemcpyDeviceToHost);
 
     // Cleanup
     cufftDestroy(plan);
-    cudaFree(d_input);
-    cudaFree(d_output);
+    cudaFree(device_input);
+    cudaFree(device_output);
+
+    return host_output;
+}
+
+void perform_fft_2d(cufftComplex* host_input, cufftComplex* host_output, int width, int height) {
+    cufftComplex *device_input, *device_output;
+    cudaMalloc(&device_input, width * height * sizeof(cufftComplex));
+    cudaMalloc(&device_output, width * height * sizeof(cufftComplex));
+    
+    cudaMemcpy(device_input, host_input, width * height * sizeof(cufftComplex), cudaMemcpyHostToDevice);
+
+    cufftHandle plan;
+    cufftPlan1d(&plan, width, CUFFT_C2C, height); // Plan for batched 1D FFTs
+    cufftExecC2C(plan, device_input, device_output, CUFFT_FORWARD);
+
+    cudaMemcpy(host_output, device_output, width * height * sizeof(cufftComplex), cudaMemcpyDeviceToHost);
+
+    cufftDestroy(plan);
+    cudaFree(device_input);
+    cudaFree(device_output);
 }
