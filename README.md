@@ -2,10 +2,10 @@
 # tools 
 CUDA toolkit 11.6 \
 python >=3.7 <=3.8 \
-CMake \
+CMake 
 # python packages
 numpy \
-open-cv \
+open-cv 
 
 
 ## set-up
