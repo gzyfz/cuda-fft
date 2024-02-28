@@ -12,9 +12,27 @@ open-cv
 simply run the setup.py to have the package generated and install on your machine.
 
 ## usage
-pyfft.fft([1D complex array])
-pyfft.fft_image(image file loaded by cv2)
+```python
+    '''
+    1D FFT
+    '''
+    y = 0.5*(np.sin(freq1 * 2.0*np.pi*x) + np.sin(freq2 * 2.0*np.pi*x))  # Sample signal
 
+    # Convert the signal to a complex numpy array (real signal, so imaginary part is 0)
+    y_complex = y.astype(np.complex64)
+
+    # Perform FFT using the CUDA-accelerated function
+    yf = pyfft.fft(y_complex)
+
+
+    '''
+    Image FFT
+    '''
+    image = load_image_as_grayscale(image_path)
+            
+    # Perform FFT on the image
+    image_fft = pyfft.fft_image(image_normalized)
+```
  ## test
  specify your location of CUDA tool kit in test file and simply run test.sh or test.bat
 
